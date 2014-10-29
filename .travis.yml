@@ -1,0 +1,34 @@
+before_install: if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+    brew update;
+    brew install qt5;
+  else
+    sudo add-apt-repository -y ppa:ubuntu-sdk-team/ppa;
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
+    sudo add-apt-repository -y ppa:ria-id/travis;
+    sudo apt-get update -qq;
+    sudo apt-get install -y gcc-4.8 g++-4.8 cmake libdigidocpp-dev qttools5-dev qttools5-dev-tools libpcsclite-dev libssl-dev;
+    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90;
+  fi
+script:
+- mkdir build
+- cd build
+- cmake -DBREAKPAD="" ..
+- make
+
+os:
+ - linux
+ - osx
+
+env:
+  global:
+   - secure: "vX847To3osqI7JytpiH5r6xlXS9r8KCNCPP3pu2yvGxAgmz917xG1lrqRGOReoCe/08hkh+gMA9vLjIyUwDlUvZuKJr5g5iPfa85/m9iPe24DLOlf9zLI5It0MFNTLYFQ5DXFmX77+/lcB9ypDQtE5w9XK+xZjyC9xr9viye77E="
+
+addons:
+  coverity_scan:
+    project:
+      name: "open-eid/qdigidoc"
+      description: "Build submitted via Travis CI"
+    notification_email: raul@metsma.ee
+    build_command_prepend: "mkdir coverity; cd coverity; cmake -DBREAKPAD='' .."
+    build_command: make
+    branch_pattern: coverity_scan
