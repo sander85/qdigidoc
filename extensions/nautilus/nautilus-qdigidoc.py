@@ -29,14 +29,14 @@ APP = 'nautilus-qdigidoc'
 class OpenDigidocExtension(GObject.GObject, Nautilus.MenuProvider):
     def __init__(self):
         pass
-        
+
     def _open_client(self, paths):
         args = ""
         for path in paths:
             args += "\"%s\" " % path
         cmd = ("qdigidocclient " + args + "&")
         os.system(cmd)
-        
+
     def menu_activate_cb(self, menu, paths):
         self._open_client(paths)
 
@@ -61,11 +61,12 @@ class OpenDigidocExtension(GObject.GObject, Nautilus.MenuProvider):
         tooltip_message = gettext.ngettext('Sign selected file with Digidoc3 Client',
                                            'Sign selected files with Digidoc3 Client',
                                            len(paths))
-	item = Nautilus.MenuItem(
-			name="OpenDigidocExtension::DigidocSigner",
-			label=_('Sign digitally'),
-			tip=tooltip_message
-	)
+
+        item = Nautilus.MenuItem(
+            name="OpenDigidocExtension::DigidocSigner",
+            label=_('Sign digitally'),
+            tip=tooltip_message
+        )
         item.set_property('icon', 'qdigidoc-client')
 
         item.connect('activate', self.menu_activate_cb, paths)
